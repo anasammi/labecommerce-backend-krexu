@@ -68,7 +68,7 @@ export const createProduct = (
   description: string,
   imageUrl: string
 ): string => {
-    const newProduct = {
+    const newProduct: TProduct = {
         id,
         name,
         price,
