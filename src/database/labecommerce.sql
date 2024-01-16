@@ -9,9 +9,9 @@ CREATE TABLE users(
 
 INSERT INTO users (id, name, email, password, created_at)
 VALUES 
-    ('u001', 'Fulano', 'fulano@email.com', 'fulano123', CURRENT_TIMESTAMP);
-    -- ('u002', 'Ciclana', 'ciclana@email.com', 'ciclana99', '2023-01-17 12:35:28'),
-    -- ('u003', 'Beltrana', 'beltrana@email.com', 'beltrana33', '2023-12-14 12:35:28');
+    ('u001', 'Fulano', 'fulano@email.com', 'fulano123', CURRENT_TIMESTAMP),
+    ('u002', 'Ciclana', 'ciclana@email.com', 'ciclana99', '2023-01-17 12:35:28'),
+    ('u003', 'Beltrana', 'beltrana@email.com', 'beltrana33', '2023-12-14 12:35:28');
 
 CREATE TABLE products(
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
@@ -57,6 +57,8 @@ CREATE TABLE purchases(
     created_at TEXT NOT NULL,
     buyer TEXT NOT NULL,
     FOREIGN KEY (buyer) REFERENCES users(id)
+        ON UPDATE CASCADE -- efeito cascata ao atualizar id na tabela users
+        ON DELETE CASCADE -- efeito cascata ao deletar id na tabela users
 );
 
 INSERT INTO purchases (id, total_price, created_at, buyer)
@@ -81,4 +83,54 @@ FROM purchases INNER JOIN users
 ON purchases.buyer = users.id;
 
 
+CREATE TABLE purchases_products (
+    purchase_id TEXT NOT NULL,
+    product_id TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    FOREIGN KEY (purchase_id) REFERENCES purchases(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE
+);
 
+INSERT INTO purchases_products (purchase_id, product_id, quantity)
+VALUES
+    ('pur001', 'prod004', 3),
+    ('pur002', 'prod002', 1),
+    ('pur003', 'prod005', 3),
+    ('pur004', 'prod001', 1);
+
+SELECT 
+    purchases_products.purchase_id AS purchaseId,
+    purchases_products.product_id AS productId,
+    purchases_products.quantity,
+    products.name AS productName,
+    products.price,
+    products.description,
+    products.image_url AS imageUrl,
+    purchases.total_price AS totalPrice,
+    purchases.created_at AS createdAt,
+    purchases.buyer AS buyerId,
+    users.name AS buyerName
+FROM purchases_products
+INNER JOIN products
+ON purchases_products.product_id = products.id
+INNER JOIN purchases
+ON purchases.id = purchases_products.purchase_id
+INNER JOIN users 
+ON purchases.buyer = users.id;
+
+DROP TABLE purchases_products;
+
+DROP TABLE purchases;
+
+DROP TABLE products;
+
+DROP TABLE users;
+
+UPDATE users
+SET id = 'u001'
+WHERE id = 'u000';
+
+DELETE FROM users
+WHERE id = 'u002';
