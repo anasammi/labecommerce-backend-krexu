@@ -4,7 +4,7 @@ CREATE TABLE users(
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    created_at TEXT NOT NULL
+    created_at TEXT NOT NULL DEFAULT(CURRENT_TIMESTAMP)
 );
 
 INSERT INTO users (id, name, email, password, created_at)
@@ -134,3 +134,6 @@ WHERE id = 'u000';
 
 DELETE FROM users
 WHERE id = 'u002';
+
+DELETE FROM purchases
+WHERE id = 'pur004';
