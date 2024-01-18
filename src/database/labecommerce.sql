@@ -57,8 +57,8 @@ CREATE TABLE purchases(
     created_at TEXT NOT NULL,
     buyer TEXT NOT NULL,
     FOREIGN KEY (buyer) REFERENCES users(id)
-        ON UPDATE CASCADE -- efeito cascata ao atualizar id na tabela users
         ON DELETE CASCADE -- efeito cascata ao deletar id na tabela users
+        ON UPDATE CASCADE -- efeito cascata ao atualizar id na tabela users
 );
 
 INSERT INTO purchases (id, total_price, created_at, buyer)
@@ -89,8 +89,8 @@ CREATE TABLE purchases_products (
     quantity INTEGER NOT NULL,
     FOREIGN KEY (purchase_id) REFERENCES purchases(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
-        ON UPDATE CASCADE 
         ON DELETE CASCADE
+        ON UPDATE CASCADE 
 );
 
 INSERT INTO purchases_products (purchase_id, product_id, quantity)
